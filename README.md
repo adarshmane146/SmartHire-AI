@@ -145,6 +145,10 @@ README.md
 - Integration with more job APIs
 - Personalized career guidance recommendations
 
+## About the Project
+
+This project, **SmartHire – AI Resume Analyzer and Live Internship & Fresher Job Discovery Platform**, was developed as part of the final year B.Tech CSE project by a team of students from **Ideal Institute of Technology, Kakinada, Andhra Pradesh**.
+
 ## License
 
 This project is developed for educational and research purposes.
