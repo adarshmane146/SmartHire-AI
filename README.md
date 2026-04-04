@@ -6,9 +6,11 @@ The platform bridges the gap between job seekers and employers by combining resu
 
 ## Project Overview
 
-The SmartHire platform allows users to upload their resume in PDF format. The system automatically extracts information such as skills, education, projects, certifications, and experience using resume parsing techniques. Based on the extracted data, the platform generates an ATS compatibility score and recommends suitable internship and fresher job opportunities.
+The SmartHire platform allows users to upload their resume in PDF format. The system automatically extracts information such as skills, education, projects, certifications, and experience using resume parsing techniques.
 
-The system also fetches live job listings and matches them with the candidate’s skill set, helping users discover relevant opportunities more efficiently.
+The platform then uses **Gemini 2.5 Flash AI model** to evaluate the resume and generate an ATS compatibility score along with improvement suggestions.
+
+The system also fetches live internship and fresher job listings using **SerpAPI (Google Jobs API)** and matches them with the candidate’s extracted skills, helping users discover relevant opportunities more efficiently.
 
 ## Key Features
 
@@ -18,34 +20,20 @@ Users can upload resumes in PDF format and the system automatically extracts imp
 ### Skill Extraction
 The platform identifies technical skills and relevant keywords from resume content.
 
-### ATS Score Evaluation
-The system generates an Applicant Tracking System score to evaluate resume quality and compatibility with industry standards.
+### AI-Powered ATS Score Evaluation
+The system generates an Applicant Tracking System score using **Gemini 2.5 Flash AI**, analyzing resume structure, keyword relevance, and skill alignment with industry standards.
 
 ### Job and Internship Recommendations
 Based on the extracted skills, the system recommends suitable internship and fresher job opportunities.
 
 ### Live Job Discovery
-The platform fetches live job listings from external sources and displays relevant opportunities for candidates.
+The platform fetches real-time job listings using **SerpAPI (Google Jobs API)** and displays relevant opportunities for candidates.
 
 ### Applicant Tracking
 Recruiters can evaluate candidate resumes and rank applicants based on ATS scores.
 
 ### Statistics and Insights
 The system provides insights such as skill demand trends, job statistics, and skill distribution analytics.
-
-## System Workflow
-
-The SmartHire system follows these steps:
-
-1. User registers or logs into the platform
-2. User uploads a resume in PDF format
-3. The system extracts text and identifies skills from the resume
-4. Resume analysis is performed and an ATS score is generated
-5. Extracted skills are compared with available job listings
-6. Matching job opportunities are identified
-7. Recommended internships and jobs are displayed to the user
-
-This process helps automate resume evaluation and job discovery.
 
 ## Technology Stack
 
@@ -61,6 +49,10 @@ This process helps automate resume evaluation and job discovery.
 ### Database
 - PostgreSQL
 
+### APIs & AI Services
+- **SerpAPI** – Fetches live fresher and internship job listings from Google Jobs
+- **Google Gemini 2.5 Flash** – Used for AI-based ATS resume analysis and scoring
+
 ### Libraries and Tools
 - Multer for file uploads
 - PDF parsing libraries for resume extraction
@@ -70,26 +62,20 @@ This process helps automate resume evaluation and job discovery.
 - Visual Studio Code
 - Git and GitHub
 
-## Project Structure
+## System Workflow
 
-```
-SmartHire-AI
+The SmartHire system follows these steps:
 
-backend
-├── src
-│   ├── routes
-│   ├── middleware
-│   ├── utils
-├── db
-│   └── schema.sql
+1. User registers or logs into the platform
+2. User uploads a resume in PDF format
+3. The system extracts text and identifies skills from the resume
+4. **Gemini AI** analyzes the resume and generates an ATS score
+5. Extracted skills are compared with available job listings
+6. Live job listings are fetched using **SerpAPI**
+7. Matching job opportunities are identified
+8. Recommended internships and jobs are displayed to the user
 
-frontend
-├── public
-├── css
-├── js
-
-README.md
-```
+This process helps automate resume evaluation and job discovery.
 
 ## Installation
 
