@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartHire - AI Resume Analyzer</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+<h1>SmartHire: AI Resume Analyzer and Live Internship & Fresher Job Discovery Platform</h1>
+<p>Resume Analyzer & AI-Powered Job Matching System</p>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-tabs">
+
+<button class="nav-tab active" onclick="switchTab('analyzer');event.target.classList.add('active')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+My Resume
+</button>
+
+<button class="nav-tab" onclick="switchTab('ats-check');event.target.classList.add('active')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+ATS Checker
+</button>
+
+<button class="nav-tab" onclick="switchTab('live-jobs');event.target.classList.add('active')">
+<div class="live-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; animation: pulse 2s infinite; margin-right: 2px;"></div>
+Live Fresher/Internship Jobs
+</button>
+
+<button class="nav-tab" onclick="switchTab('jobs');event.target.classList.add('active')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+Sample Positions
+</button>
+
+<button class="nav-tab" onclick="switchTab('stats');event.target.classList.add('active');loadStats()">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+Statistics
+</button>
+
+<button id="logoutBtn" class="nav-tab" style="margin-left:auto;" onclick="logout()" hidden>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+Logout
+</button>
+
+</div>
+
+<!-- =========================================
+RESUME ANALYZER
+========================================= -->
+
+<div id="analyzer" class="tab-content active">
+
+<h2>📄 Upload Your Resume</h2>
+
+<div class="upload-box" onclick="document.getElementById('fileInput').click()">
+<input type="file" id="fileInput" accept="application/pdf">
+<div class="upload-box-content">
+<div class="upload-icon">
+<svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#667eea" />
+      <stop offset="100%" stop-color="#764ba2" />
+    </linearGradient>
+  </defs>
+  <path d="M7 16L12 11M12 11L17 16M12 11V21M20.39 16.39C21.36 15.42 22 14.04 22 12.5C22 9.46 19.54 7 16.5 7C16.14 7 15.79 7.03 15.46 7.1C14.71 4.2 12.06 2 8.5 2C4.36 2 1 5.36 1 9.5C1 11.23 1.58 12.82 2.58 14.1" stroke="url(#iconGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+<h3 style="color:#667eea;font-weight:700;font-size:1.3em;margin-bottom:8px;">
+Click to Upload or Drag Resume Here
+</h3>
+<p style="color:#9ca3af;font-size:0.9em;margin-bottom:15px;">PDF files only</p>
+<div id="fileStatus">No file chosen</div>
+</div>
+</div>
+
+<button id="analyzeBtn" class="analyze-btn" onclick="processResume()">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+Analyze Resume & Predict Job Matches
+</button>
+
+<div id="loading" class="loading" style="display:none">
+<div class="spinner"></div>
+<p>Processing your resume...</p>
+</div>
+
+<div id="results"></div>
+
+</div>
+
+
+<!-- =========================================
+ATS CHECKER
+========================================= -->
+
+<div id="ats-check" class="tab-content">
+
+<iframe src="ats-checker.html"
+style="width:100%;height:calc(100vh - 120px);border:none">
+</iframe>
+
+</div>
+
+
+<!-- =========================================
+LIVE JOBS
+========================================= -->
+
+<div id="live-jobs" class="tab-content">
+
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+<div style="width: 14px; height: 14px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6); animation: pulse 2s infinite;"></div>
+<h2 style="margin: 0; font-size: 1.8em; color: #1f2937;">Live Fresher & Internship Jobs</h2>
+</div>
+
+<div class="search-container">
+<div class="search-input-wrapper">
+<svg class="search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21 21L16.65 16.65" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<input type="text" id="jobSearchQuery" class="search-input" placeholder="Search for roles (e.g., Python Developer, Data Analyst)...">
+</div>
+
+<button class="search-btn" onclick="fetchLiveJobs()">
+<span>Search Live Jobs</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 5L19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
+</div>
+
+<div id="liveJobsList" class="job-list"></div>
+
+</div>
+
+
+<!-- =========================================
+SAMPLE JOBS
+========================================= -->
+
+<div id="jobs" class="tab-content">
+
+<h2>📌 Sample Fresher Positions</h2>
+
+<div id="jobsList" class="job-list"></div>
+
+</div>
+
+
+<!-- =========================================
+STATISTICS DASHBOARD
+========================================= -->
+
+<div id="stats" class="tab-content">
+
+<h2>📊 Stats</h2>
+
+<!-- CARDS -->
+<div id="statsContainer" class="stats-grid"></div>
+
+<!-- CHARTS -->
+<div id="chartsContainer"
+style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-top:15px;
+">
+
+<!-- TOP SKILLS -->
+<div style="background:white;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+
+<h4 style="color:#667eea">🎯 Top Skills</h4>
+
+<div style="height:280px">
+
+<canvas id="skillsChart"></canvas>
+
+</div>
+
+</div>
+
+
+<!-- SKILL DISTRIBUTION -->
+<div style="background:white;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+
+<h4 style="color:#667eea">📊 Your Resume Skill Distribution</h4>
+
+<div style="height:260px">
+
+<canvas id="userSkillsChart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================
+SCRIPTS
+========================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/resumeAnalyzer.js"></script>
+<script src="js/jobsManager.js"></script>
+<script src="js/liveJobs.js"></script>
+<script src="js/statistics.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+console.log("SmartHire loaded")
+
+loadJobs()
+
+const token = localStorage.getItem("token")
+
+if(token){
+document.getElementById("logoutBtn").hidden=false
+}
+
+})
+
+</script>
+
+</body>
+</html>

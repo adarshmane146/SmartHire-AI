@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ATS Resume Checker</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Inter,Segoe UI,Tahoma,sans-serif;
+background:transparent;
+padding: 20px 0;
+}
+
+/* container */
+
+.ats-container{
+width:100%;
+max-width: 100%;
+margin: 0 auto;
+}
+
+/* layout grid */
+.ats-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+    margin-bottom: 30px;
+}
+
+/* info section */
+.ats-info h1 {
+    font-size: 2.4rem;
+    color: #1f2937;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.ats-info > p {
+    color: #4b5563;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+.tips-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 5px solid #6366f1;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.tips-box h3 {
+    margin-top: 0;
+    color: #4f46e5;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tips-box ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #4b5563;
+}
+
+.tips-box li {
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-size: 1rem;
+}
+.tips-box li:last-child {
+    margin-bottom: 0;
+}
+
+/* upload */
+
+.ats-upload-box{
+    border: 2px dashed rgba(79, 70, 229, 0.5);
+    background: linear-gradient(145deg, rgba(249, 250, 251, 0.8) 0%, rgba(238, 242, 255, 0.8) 100%);
+    box-shadow: 0 8px 32px rgba(79, 70, 229, 0.05);
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.ats-upload-box:hover{
+    background: linear-gradient(145deg, rgba(238, 242, 255, 0.95) 0%, rgba(224, 231, 255, 0.95) 100%);
+    border-color: #4f46e5;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(79, 70, 229, 0.15);
+}
+
+@keyframes fileFloat {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.upload-icon{
+    margin-bottom: 20px;
+    animation: fileFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 10px 10px rgba(79, 70, 229, 0.2));
+}
+
+.ats-upload-box h3 {
+    margin: 6px 0;
+    color: #4f46e5;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.ats-upload-box p{
+    margin: 6px 0;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+#atsFileInput{
+display:none;
+}
+
+/* file status */
+
+.ats-file-status{
+    margin-top: 15px;
+    padding: 12px 20px;
+    border-radius: 20px;
+    background: white;
+    color: #4f46e5;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+/* button */
+
+.ats-button-group{
+margin-top:25px;
+}
+
+.ats-analyze-btn{
+    width: 100%;
+    padding: 16px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.ats-analyze-btn:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4);
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+}
+
+.ats-analyze-btn:active{
+    transform: translateY(1px);
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+}
+
+/* loading */
+
+#atsLoading{
+display:none;
+justify-content:center;
+align-items:center;
+padding:30px;
+margin-top:25px;
+border-radius:12px;
+background:#f9fafb;
+}
+
+.ats-spinner{
+border:4px solid #e5e7eb;
+border-top:4px solid #4f46e5;
+border-radius:50%;
+width:40px;
+height:40px;
+animation:spin 1s linear infinite;
+margin-right:12px;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+/* results */
+
+#atsResults{
+margin-top:30px;
+}
+
+/* responsive */
+
+@media(max-width:900px){
+    .ats-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .ats-info h1 {
+        font-size: 1.8rem;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="ats-container">
+
+<div class="ats-layout">
+
+    <div class="ats-info">
+        <h1>ATS Compatibility Checker</h1>
+        <p>Ensure your resume makes it past Applicant Tracking Systems (ATS). Most modern companies use these systems to automatically filter resumes before a human recruiter ever sees them. Maximize your chances of landing an interview.</p>
+        
+        <div class="tips-box">
+            <h3>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                How to pass the ATS filter:
+            </h3>
+            <ul>
+                <li><strong>Use standard fonts:</strong> like Arial, Calibri, or Inter.</li>
+                <li><strong>Clear Formatting:</strong> Avoid complex columns, tables, or heavy graphics.</li>
+                <li><strong>Keyword Matches:</strong> Include exact technical skills matching the job description.</li>
+                <li><strong>File Type:</strong> Save and upload your resume strictly as a PDF document.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="ats-action-area">
+        <!-- upload -->
+
+        <div class="ats-upload-box" onclick="document.getElementById('atsFileInput').click()">
+
+        <div class="upload-icon">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="atsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1" />
+              <stop offset="100%" stop-color="#4f46e5" />
+            </linearGradient>
+          </defs>
+          <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="url(#atsGradient)" fill-opacity="0.1" stroke="url(#atsGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 2V8H20" stroke="url(#atsGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 18V12" stroke="url(#atsGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 15L12 12L15 15" stroke="url(#atsGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        </div>
+
+        <h3>Click to Upload or Drag File Here</h3>
+        <p style="font-size:0.9rem;">PDF only • Max size 10MB</p>
+
+        </div>
+
+        <input type="file" id="atsFileInput" accept=".pdf">
+
+        <div id="atsFileStatus" class="ats-file-status">
+        No file selected
+        </div>
+
+        <!-- button -->
+
+        <div class="ats-button-group">
+        <button class="ats-analyze-btn" onclick="processATSAnalysis()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 11L12 14L22 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 12V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Analyze ATS Compatibility
+        </button>
+        </div>
+        
+    </div>
+</div>
+
+<!-- loading -->
+
+<div id="atsLoading">
+<div class="ats-spinner"></div>
+<span>Analyzing your resume...</span>
+</div>
+
+<!-- results -->
+
+<div id="atsResults"></div>
+
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+if(!localStorage.getItem("token")){
+window.location.href="login.html";
+}
+
+});
+</script>
+
+<script src="js/atsChecker.js?v=2"></script>
+
+</body>
+</html>
