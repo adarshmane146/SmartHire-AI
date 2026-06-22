@@ -125,7 +125,6 @@ This process helps automate resume evaluation and job discovery.
 ## Use Cases
 
 - Students and fresh graduates can upload resumes and receive job recommendations.
-- Recruiters can analyze candidate resumes quickly using ATS scoring.
 - Users can discover real-time internship and fresher job opportunities.
 - The system provides insights about skill demand in the job market.
 
