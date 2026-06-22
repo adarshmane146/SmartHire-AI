@@ -15,7 +15,7 @@ export async function analyzeResumeWithAI(resumeText) {
       model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 8000
+        maxOutputTokens: 8000 
       }
     });
 

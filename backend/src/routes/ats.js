@@ -20,6 +20,8 @@ import {
 
 import { analyzeResumeWithAI } from "../utils/aiATSAnalyzer.js";
 
+import { authenticateToken } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 const pdfExtract = new PDFExtract();
 
@@ -53,7 +55,7 @@ function extractPDFText(buffer) {
    POST /api/ats/check
 ============================== */
 
-router.post("/check", async (req, res) => {
+router.post("/check", authenticateToken, async (req, res) => {
 
   try {
 

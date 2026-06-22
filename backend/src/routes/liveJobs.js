@@ -11,6 +11,8 @@ import express from 'express';
 import { getJson } from 'serpapi';
 import { extractSkillsFromText } from '../utils/skillExtractor.js';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
 /**
@@ -19,7 +21,7 @@ const router = express.Router();
  * Fetch LIVE India fresher/internship jobs from Google Jobs API
  * Uses parallel requests for speed
  */
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
         const query = req.query.q || 'fresher developer'; 
         let allJobs = [];

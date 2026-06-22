@@ -67,7 +67,17 @@ const skillAliases = {
 
   spring: "Spring Boot",
   "springboot": "Spring Boot",
-  "spring-boot": "Spring Boot"
+  "spring-boot": "Spring Boot",
+
+  /* AI & Blockchain */
+  ai: "Artificial Intelligence",
+  ml: "Machine Learning",
+  dl: "Deep Learning",
+  nlp: "NLP",
+  cv: "Computer Vision",
+  llm: "LLM",
+  solidity: "Solidity",
+  web3: "Web3.js"
 };
 
 /* ================================
@@ -104,7 +114,18 @@ const marketDemand = {
   Communication: 88,
   "Team Work": 87,
   Agile: 80,
-  Scrum: 78
+  Scrum: 78,
+
+  /* AI & Blockchain */
+  "Artificial Intelligence": 96,
+  "Machine Learning": 94,
+  "Deep Learning": 92,
+  NLP: 90,
+  "Computer Vision": 88,
+  LLM: 97,
+  Solidity: 89,
+  "Web3.js": 87,
+  "Smart Contracts": 91
 };
 
 /* ================================

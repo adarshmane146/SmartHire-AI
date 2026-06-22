@@ -9,6 +9,8 @@
 import express from 'express';
 import { getAllJobs, addJob, deleteJob } from '../utils/database.js';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
 /**
@@ -28,7 +30,7 @@ router.get('/', async (req, res) => {
  * POST /api/jobs
  * Add a new job
  */
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     try {
         const { title, company, location, description, requirements, experience_level, salary, apply_link } = req.body;
         
@@ -57,7 +59,7 @@ router.post('/', async (req, res) => {
  * DELETE /api/jobs/:id
  * Delete a job
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
     try {
         await deleteJob(req.params.id);
         res.json({ success: true });

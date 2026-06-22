@@ -17,16 +17,17 @@ import { calculateMatch } from '../utils/jobMatcher.js';
 import { getAllJobs, saveResume } from '../utils/database.js';
 import { addLiveMatchesCount } from '../utils/statsStore.js';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
 const pdfExtract = new PDFExtract();
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 /**
  * POST /api/resume/analyze
  * Upload and analyze resume for job matches
  */
-router.post('/analyze', async (req, res) => {
+router.post('/analyze', authenticateToken, async (req, res) => {
 
     try {
 
@@ -35,22 +36,9 @@ router.post('/analyze', async (req, res) => {
         }
 
         /* =====================================
-           Detect Logged In User (JWT)
+           Logged In User (from JWT)
         ===================================== */
-
-        let userId = null;
-
-        const authHeader = req.headers.authorization;
-
-        if (authHeader && authHeader.startsWith("Bearer ")) {
-            try {
-                const token = authHeader.split(" ")[1];
-                const decoded = jwt.verify(token, JWT_SECRET);
-                userId = decoded.id;
-            } catch (err) {
-                console.warn("JWT decode failed");
-            }
-        }
+        const userId = req.user.id;
 
         console.log("📄 Processing Resume...");
 

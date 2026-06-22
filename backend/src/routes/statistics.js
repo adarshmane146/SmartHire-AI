@@ -10,31 +10,20 @@
 */
 
 import express from "express";
-import jwt from "jsonwebtoken";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 import { getAllJobs, getAllResumes } from "../utils/database.js";
 import { getInDemandSkills } from "../utils/skillExtractor.js";
 import { getTotalLiveMatchesCount } from "../utils/statsStore.js";
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 /**
  * GET /api/statistics
  */
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
-    // Detect Logged In User
-    const authHeader = req.headers.authorization;
-    let userId = null;
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      try {
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
-        userId = decoded.id;
-      } catch (err) {
-        console.warn("JWT decode failed");
-      }
-    }
+    // Logged In User from middleware
+    const userId = req.user.id;
 
     // Fetch Database Data
     const jobs = [

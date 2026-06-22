@@ -7,8 +7,17 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { addUser, findUserByEmail } from '../utils/database.js';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
+
+/**
+ * GET /api/auth/me
+ * Verify token and return user data
+ */
+router.get('/me', authenticateToken, (req, res) => {
+    res.json({ user: req.user });
+});
 
 // signup route
 router.post('/signup', async (req, res) => {
@@ -23,7 +32,10 @@ router.post('/signup', async (req, res) => {
         }
         const hashed = await bcrypt.hash(password, 10);
         const user = await addUser({ name, email, password: hashed });
-        const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1d' });
+        
+        const secret = process.env.JWT_SECRET || 'supersecretkey';
+        const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, secret, { expiresIn: '1d' });
+        
         // set cookie for convenience
         res.cookie('token', token, { httpOnly: true, maxAge: 24 * 3600 * 1000 });
         res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
@@ -48,7 +60,10 @@ router.post('/login', async (req, res) => {
         if (!match) {
             return res.status(400).json({ error: 'Invalid credentials' });
         }
-        const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1d' });
+        
+        const secret = process.env.JWT_SECRET || 'supersecretkey';
+        const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, secret, { expiresIn: '1d' });
+        
         res.cookie('token', token, { httpOnly: true, maxAge: 24 * 3600 * 1000 });
         res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
     } catch (err) {

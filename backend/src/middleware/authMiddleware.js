@@ -2,9 +2,8 @@
 from the request header to ensure that the user is authorized before accessing protected routes. */
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
-
 export function authenticateToken(req,res,next){
+    const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
     const authHeader = req.headers.authorization;
 

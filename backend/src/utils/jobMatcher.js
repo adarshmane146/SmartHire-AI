@@ -18,10 +18,16 @@
  * Calculate match between user skills and job requirements
  * @param {array} userSkills - Array of user's skills
  * @param {array} jobRequirements - Array of job required skills
+ * @param {object} options - Optional settings for match calculation
+ * @param {number} options.fresherWeight - Default match percentage for fresher-friendly jobs (default: 30)
+ * @param {boolean} options.caseInsensitive - Whether to perform case-insensitive matching (default: true)
  * @returns {object} Match data with percentage and matched/missing skills
  */
-
-function calculateMatch(userSkills = [], jobRequirements = []) {
+function calculateMatch(userSkills = [], jobRequirements = [], options = {}) {
+    const {
+        fresherWeight = 30,
+        caseInsensitive = true
+    } = options;
 
     // Ensure arrays
     if (!Array.isArray(userSkills)) userSkills = [];
@@ -32,29 +38,29 @@ function calculateMatch(userSkills = [], jobRequirements = []) {
         return {
             matched: [],
             missing: [],
-            percentage: 30,
+            percentage: fresherWeight,
             total_required: 1
         };
     }
 
-    // Convert user skills to lowercase safely
-    const userSkillsLower = userSkills
-        .filter(skill => typeof skill === "string")
-        .map(skill => skill.toLowerCase());
+    // Convert user skills to a Set for faster lookups
+    const userSkillsSet = new Set(
+        userSkills
+            .filter(skill => typeof skill === "string")
+            .map(skill => (caseInsensitive ? skill.toLowerCase() : skill))
+    );
 
     const matched = [];
     const missing = [];
 
     for (let req of jobRequirements) {
-
-        // Skip invalid requirement values
         if (typeof req !== "string") {
             continue;
         }
 
-        const requirement = req.toLowerCase();
+        const requirement = caseInsensitive ? req.toLowerCase() : req;
 
-        if (userSkillsLower.includes(requirement)) {
+        if (userSkillsSet.has(requirement)) {
             matched.push(req);
         } else {
             missing.push(req);
@@ -62,12 +68,9 @@ function calculateMatch(userSkills = [], jobRequirements = []) {
     }
 
     // Calculate percentage
-    let percentage = Math.round((matched.length / jobRequirements.length) * 100);
-
-    // Ensure fresher jobs still appear even if no skill matches
-    if (percentage === 0 && jobRequirements.length > 0) {
-        percentage = 15;
-    }
+    const percentage = matched.length > 0
+        ? Math.round((matched.length / jobRequirements.length) * 100)
+        : fresherWeight;
 
     return {
         matched,
